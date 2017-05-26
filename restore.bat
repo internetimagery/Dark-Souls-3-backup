@@ -1,1 +1,67 @@
-REM Check for backup folder in script location. Ask which backup to restore.
+@echo off
+setlocal enabledelayedexpansion
+
+REM Our messages. Change if you want a different language.
+set nosave=Cannot find save file.
+set nobackup=Cannot find the backup folder.
+set restore=Which backup number would you like to restore?
+set confirm=Restoring this backup will override any progress you have made. Are you sure?
+set abort=Restore aborted.
+
+REM Our variables!
+set backup=%~dp0Backups\
+set savegame=%appdata%\DarkSoulsIII\
+set restorelimit=8
+
+REM Quit if savefile cannot be found.
+if not exist "%savegame%" (
+  echo %nosave%
+  pause
+  exit
+  )
+
+REM Quit if backup folder cannot be found.
+if not exist "%backup%" (
+  echo %nobackup%
+  pause
+  exit
+  )
+
+REM Get backups.
+set files=
+set count=%restorelimit%
+for /d %%D in ("%backup%*") do (
+  if !count! gtr 0 (
+    set /a count=!count! - 1
+    set files=!files! "%%~nxD"
+    )
+  )
+
+REM Ask for backup selection.
+set count=0
+for %%m in (!files!) do (
+  set /a count=!count! + 1
+  echo !count! -- %%m
+  )
+
+:ask
+set /p restorenum="%restore% [1 ~ !count!]-> "
+if %restorenum% lss 1 (
+  goto ask
+  )
+if %restorenum% gtr !count! (
+  goto ask
+  )
+
+REM Ask for confirmation and restore.
+set /p yesno="%confirm% (Y/N) -> "
+if /I "%yesno%"=="y" (
+  echo "DO IT!"
+
+  ) else (
+    echo %abort%
+    pause
+    exit
+    )
+
+REM pause
