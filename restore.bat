@@ -31,12 +31,13 @@ if not exist "%backup%" (
 REM Get backups.
 set files=
 set count=%restorelimit%
-for /d %%D in ("%backup%*") do (
+for /f "delims=" %%D in ('dir %backup% /b /ad /o-n') do (
   if !count! gtr 0 (
     set /a count=!count! - 1
-    set files=!files! "%%~nxD"
+    set files=!files! "%%D"
     )
   )
+
 
 REM Ask for backup selection.
 set count=0
