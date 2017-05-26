@@ -4,9 +4,12 @@ setlocal enabledelayedexpansion
 REM Our messages. Change if you want a different language.
 set nosave=Cannot find save file.
 set nobackup=Cannot find the backup folder.
-set restore=Which backup number would you like to restore?
+set restore=Pick a backup number to restore.
 set confirm=Restoring this backup will override any progress you have made. Are you sure?
 set abort=Restore aborted.
+set done=Backup restored.
+set restoring=Restoring
+set success=Restore success. Have fun.
 
 REM Our variables!
 set backup=%~dp0Backups\
@@ -16,15 +19,13 @@ set restorelimit=8
 REM Quit if savefile cannot be found.
 if not exist "%savegame%" (
   echo %nosave%
-  pause
-  exit
+  goto eof
   )
 
 REM Quit if backup folder cannot be found.
 if not exist "%backup%" (
   echo %nobackup%
-  pause
-  exit
+  goto eof
   )
 
 REM Get backups.
@@ -54,14 +55,20 @@ if %restorenum% gtr !count! (
   )
 
 REM Ask for confirmation and restore.
-set /p yesno="%confirm% (Y/N) -> "
-if /I "%yesno%"=="y" (
-  echo "DO IT!"
-
+set /p yesno="%confirm% [Y/N] -> "
+if /I "%yesno%" equ "y" (
+  set count=0
+  for %%f in (!files!) do (
+    set /a count=!count! + 1
+    if !count! equ %restorenum% (
+      echo %restoring% %%f
+      xcopy /s /e /q /y "%backup%%%~nf\*" "%savegame%"
+      echo %success%
+      goto eof
+        )
+    )
   ) else (
     echo %abort%
-    pause
-    exit
     )
-
-REM pause
+:eof
+pause

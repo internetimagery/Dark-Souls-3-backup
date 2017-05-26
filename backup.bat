@@ -16,8 +16,7 @@ set savegame=%appdata%\DarkSoulsIII\
 REM Quit if savefile cannot be found.
 if not exist "%savegame%" (
   echo %nosave%
-  pause
-  exit
+  goto eof
   )
 
 REM Create a backup folder if one cannot be found.
@@ -45,8 +44,7 @@ set latest=%backup%!_output!\
 REM Check folder isn't already there.
 if exist "%latest%" (
   echo %backupexsits%
-  pause
-  exit
+  goto eof
   )
 
 REM Make the folder and copy over game files.
@@ -57,4 +55,5 @@ echo %success%
 
 REM Pause if executed directly.
 REM https://stackoverflow.com/questions/3551888/pausing-a-batch-file-when-double-clicked-but-not-when-run-from-a-console-window
+:eof
 ECHO %cmdcmdline% | findstr /i /c:"%~nx0" >NUL 2>&1 && PAUSE
