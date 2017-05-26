@@ -1,1 +1,23 @@
-REM Run the game, and keep asking for a backup in an infiniate loop.
+@echo off
+setlocal
+
+REM Change the text here to whatever locale you like.
+set nobackup=Failed to find backup.bat
+
+REM variables!
+set backupscript=%~dp0backup.bat
+
+REM Check if backup script is here.
+if not exist "%~dp0backup.bat" (
+  echo %nobackup%
+  pause
+  exit
+  )
+
+REM Run the game!
+start steam://rungameid/374320
+
+REM Loop forever, asking for backups.
+:doit
+call %backupscript%
+goto doit
