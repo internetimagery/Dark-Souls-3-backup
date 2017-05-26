@@ -4,6 +4,10 @@ Simple backup script for *dark souls 3* game files.
 
 Download, unzip and extract all *".bat"* files into a folder somewhere. Keep the three files together.
 
+You can download the files from the link below.
+
+https://github.com/internetimagery/Dark-Souls-3-backup/archive/master.zip
+
 ### Backups
 
 To back your save up, double click the file *"backup.bat"*.
